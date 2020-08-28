@@ -1,3 +1,4 @@
+import { writeFile } from 'fs';
 import micromatch = require('micromatch');
 import ApigSwaggerUi = require('.');
 import { APIGateway } from 'aws-sdk';

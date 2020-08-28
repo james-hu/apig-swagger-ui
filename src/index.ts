@@ -20,7 +20,7 @@ class ApigSwaggerUi extends Command {
   }
 
   static args = [
-    {name: 'path' as const, description: 'path for putting generated files'}
+    {name: 'path' as const, default: 'api-doc', description: 'path for putting generated files'}
   ]
 
   
