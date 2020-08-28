@@ -11,7 +11,9 @@
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
     "@oclif/plugin-help": "^3.2.0",
+    "@types/micromatch": "^4.0.1",
     "aws-sdk": "^2.738.0",
+    "micromatch": "^4.0.2",
     "swagger-ui-dist": "^3.32.4",
     "tslib": "^1.13.0"
   },
