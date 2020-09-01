@@ -1,6 +1,8 @@
 import {Command, flags} from '@oclif/command'
 import * as Parser from '@oclif/parser';
-import {execute} from './command';
+import { Generator } from './generator';
+import { LocalServer } from './local-server';
+import { Configuration } from './configuration';
 
 
 class ApigSwaggerUi extends Command {
@@ -13,8 +15,10 @@ class ApigSwaggerUi extends Command {
     help: flags.help({char: 'h'}),
     // flag with a value (-n, --name=VALUE)
     region: flags.string({char: 'r', description: 'AWS region'}),
-    include: flags.string({char: 'i', default: '*/*', multiple: true, description: 'custom domains to include'}),
+    include: flags.string({char: 'i', default: ['*/*', '*/'], multiple: true, description: 'custom domains to include'}),
     exclude: flags.string({char: 'x', multiple: true, description: 'custom domains to exclude'}),
+    server: flags.boolean({char: 's', description: 'start a local http server and open a browser for viewing generated files'}),
+    port: flags.integer({char: 'p', default: 8001, description: 'port number of the local http server'}),
     // flag with no value (-f, --force)
     force: flags.boolean({char: 'f'}),
   }
@@ -27,7 +31,13 @@ class ApigSwaggerUi extends Command {
   async run() {
     const options = this.parse<GetF<typeof ApigSwaggerUi>, ArgType>(ApigSwaggerUi)
     console.log(options);
-    return execute(options);
+    const config = new Configuration(options);
+    const generator = new Generator(config);
+    await generator.generate();
+    if (options.flags.server) {
+      const server = new LocalServer(config);
+      server.start();
+    }
   }
 
 
