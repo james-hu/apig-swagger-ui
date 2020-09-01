@@ -20,7 +20,7 @@ export class Generator {
             await this.emptyApiFolder();
             for (let domainNameObj of domainNameObjects) {
                 const domainName = domainNameObj.domainName!
-                console.log(domainName);
+                // console.log(domainName);
                 const supportHttps = domainNameObj.securityPolicy != null;
                 const mappings = (await apig.getBasePathMappings({domainName, limit: 500}).promise())?.items;
                 if (mappings != null) {
@@ -33,7 +33,7 @@ export class Generator {
                         const shouldExclude = this.config.options.flags.exclude == null ? false : micromatch.isMatch(domainAndBasePath, this.config.options.flags.exclude);
                         if (shouldInclude && !shouldExclude) {
                             const baseUrl = `${supportHttps ? 'https' : 'http'}://${domainAndBasePath}`;
-                            console.log(baseUrl);
+                            console.log(`Generating for: ${baseUrl}`);
                             const exported = await apig.getExport({
                                 restApiId: mapping.restApiId!,
                                 stageName: mapping.stage!,
@@ -82,11 +82,17 @@ export class Generator {
             const server = specObject.servers[0];
             const defaultBasePath = server.variables?.basePath?.default;
             if (defaultBasePath && server.url) {
-                server.url = (server.url as string).replace('{basePath}', defaultBasePath)
-                                                   .replace('//', '/');
+                server.url = (server.url as string).replace('/{basePath}', defaultBasePath);
                 if (Object.keys(server.variables).length == 1) {
                     delete server.variables;
                 }
+            }
+        }
+
+        // api_key
+        if (specObject.components?.securitySchemes?.api_key && !specObject.securityDefinitions) {
+            specObject.securityDefinitions = {
+                api_key: specObject.components?.securitySchemes?.api_key,
             }
         }
 
