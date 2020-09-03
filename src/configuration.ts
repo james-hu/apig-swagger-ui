@@ -34,4 +34,15 @@ export class Configuration {
     pathSpecFile(domain: string, basePath: string) {
         return `${this.basePathApi}/${domain}/${this.specFileName(basePath)}`;
     }
+
+    info(message?: any, ...optionalParams: any[]): void {
+        if (this.options.flags.quiet !== true) {
+            console.log(message, ...optionalParams);
+        }
+    }
+    debug(message?: any, ...optionalParams: any[]): void {
+        if (this.options.flags.debug === true) {
+            console.log(message, ...optionalParams);
+        }
+    }
 }

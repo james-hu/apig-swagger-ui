@@ -17,7 +17,7 @@ export class LocalServer {
     start(doOpen = true) {
         this.server.start((err: any, server: any) => {
             if (err) throw err;
-            console.log(`Local server started. Ctrl-C to stop. Access through: ${this.url}`);
+            this.config.info(`Local server started. Ctrl-C to stop. Access URL: ${this.url}`);
             if (doOpen) {
                 this.open().then(() => this.stop());
             }

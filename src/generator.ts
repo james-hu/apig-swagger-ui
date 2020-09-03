@@ -20,7 +20,7 @@ export class Generator {
             await this.emptyApiFolder();
             for (let domainNameObj of domainNameObjects) {
                 const domainName = domainNameObj.domainName!
-                // console.log(domainName);
+                this.config.debug(`Found custom domain: ${domainName}`);
                 const supportHttps = domainNameObj.securityPolicy != null;
                 const mappings = (await apig.getBasePathMappings({domainName, limit: 500}).promise())?.items;
                 if (mappings != null) {
@@ -31,9 +31,10 @@ export class Generator {
                         const domainAndBasePath = `${domainName}/${basePath}`;
                         const shouldInclude = micromatch.isMatch(domainAndBasePath, this.config.options.flags.include);
                         const shouldExclude = this.config.options.flags.exclude == null ? false : micromatch.isMatch(domainAndBasePath, this.config.options.flags.exclude);
+                        this.config.debug(`Found API: ${domainAndBasePath}, shouldInclude=${shouldInclude}, shouldExclude=${shouldExclude}`);
                         if (shouldInclude && !shouldExclude) {
                             const baseUrl = `${supportHttps ? 'https' : 'http'}://${domainAndBasePath}`;
-                            console.log(`Generating for: ${baseUrl}`);
+                            this.config.info(`Generating OpenAPI spec for: ${baseUrl}`);
                             const exported = await apig.getExport({
                                 restApiId: mapping.restApiId!,
                                 stageName: mapping.stage!,
@@ -58,7 +59,6 @@ export class Generator {
             await copySwaggerUiPromise; // because we copy swagger-ui/index.html to home page and then modify it
             await homePage.generate();
         }
-        console.log('Done.');
         return;
     }
 

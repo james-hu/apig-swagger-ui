@@ -10,17 +10,19 @@ class ApigSwaggerUi extends Command {
   static description = 'Command line tool for generating OpenAPI spec and SwaggerUI from AWS API Gateway'
 
   static flags = {
-    // add --version flag to show CLI version
     version: flags.version({char: 'v'}),
     help: flags.help({char: 'h'}),
-    // flag with a value (-n, --name=VALUE)
+
     region: flags.string({char: 'r', description: 'AWS region'}),
-    include: flags.string({char: 'i', default: ['*/*', '*/'], multiple: true, description: 'custom domains to include'}),
-    exclude: flags.string({char: 'x', multiple: true, description: 'custom domains to exclude'}),
+
+    include: flags.string({char: 'i', default: ['*/*', '*/'], multiple: true, description: 'custom domains and base path mappings to include'}),
+    exclude: flags.string({char: 'x', multiple: true, description: 'custom domains and base path mappings to exclude'}),
+
     server: flags.boolean({char: 's', description: 'start a local http server and open a browser for viewing generated files'}),
     port: flags.integer({char: 'p', default: 8001, description: 'port number of the local http server'}),
-    // flag with no value (-f, --force)
-    force: flags.boolean({char: 'f'}),
+    
+    quiet: flags.boolean({char: 'q', description: 'no console output'}),
+    debug: flags.boolean({char: 'd', description: 'output debug messages'}),
   }
 
   static args = [
@@ -30,8 +32,8 @@ class ApigSwaggerUi extends Command {
   
   async run() {
     const options = this.parse<GetF<typeof ApigSwaggerUi>, ArgType>(ApigSwaggerUi)
-    console.log(options);
     const config = new Configuration(options);
+    config.debug('Options: ', options);
     const generator = new Generator(config);
     await generator.generate();
     if (options.flags.server) {
