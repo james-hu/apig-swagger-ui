@@ -52,7 +52,7 @@ export class Generator {
                                 let specObj = JSON.parse(specString);
                                 // write original version, then transform, then write transformed version
                                 fs.writeJson(specFile.replace(/\.json$/, '.apig.json'), specObj, {spaces: 2}).then(() => {
-                                    transformer.transform(specObj, domainNameObj, mapping);
+                                    transformer.transform(specObj, domainNameObj, mapping, domainAndBasePath);
                                     return fs.writeJson(specFile, specObj, {spaces: 2});
                                 });
                                 hasSpecFileWritten = true;
