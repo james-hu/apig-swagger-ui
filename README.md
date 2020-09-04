@@ -28,11 +28,7 @@ Local server started. Ctrl-C to stop. Access URL: http://localhost:8001/
 
 You can use `--include` and `--exclude` flags to specify which domain/path to include and which to exclude.
 
-<!-- toc -->
-* [Usage](#usage)
-* [Commands](#commands)
-<!-- tocstop -->
-# Usage
+## Usage
 
 <!-- usage -->
 ```sh-session
@@ -47,7 +43,22 @@ USAGE
 ...
 ```
 <!-- usagestop -->
-# Commands
-<!-- commands -->
+## Arguments
 
-<!-- commandsstop -->
+```sh-session
+  PATH  [default: api-doc] path for putting generated files
+```
+
+## Options
+
+```sh-session
+  -d, --debug            output debug messages
+  -h, --help             show CLI help
+  -i, --include=include  [default: */*,*/] custom domains and base path mappings to include
+  -p, --port=port        [default: 8001] port number of the local http server
+  -q, --quiet            no console output
+  -r, --region=region    AWS region
+  -s, --server           start a local http server and open a browser for viewing generated files
+  -v, --version          show CLI version
+  -x, --exclude=exclude  custom domains and base path mappings to exclude
+```
