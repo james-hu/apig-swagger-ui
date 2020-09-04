@@ -30,8 +30,8 @@ class ApigSwaggerUi extends Command {
   ]
 
   
-  async run() {
-    const options = this.parse<GetF<typeof ApigSwaggerUi>, ArgType>(ApigSwaggerUi)
+  async run(argv?: string[]) {
+    const options = this.parse<GetF<typeof ApigSwaggerUi>, ArgType>(ApigSwaggerUi, argv)
     const config = new Configuration(options);
     config.debug('Options: ', options);
     const generator = new Generator(config);
