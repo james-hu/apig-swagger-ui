@@ -6,12 +6,14 @@ import ApigSwaggerUi = require('.');
 import { APIGateway } from 'aws-sdk';
 import { HomePage } from './home-page';
 import { Configuration } from './configuration';
+import { Transformer } from './transformer';
 
 export class Generator {
     constructor(protected config: Configuration) {}
 
     async generate() {
         const homePage = new HomePage(this.config);
+        const transformer = new Transformer(this.config);
 
         const apig = new APIGateway({region: this.config.options.flags.region});
         const domainNameObjects = (await apig.getDomainNames({limit: 500}).promise())?.items;
@@ -43,9 +45,15 @@ export class Generator {
         
                                 }
                             }).promise();
-                            const spec = exported.body?.toString('utf8');
-                            if (spec != null) {
-                                this.writeSpecFile(spec, domainName, basePath);
+                            const specString = exported.body?.toString('utf8');
+                            if (specString != null) {
+                                const specFile = this.config.specFile(domainName, basePath);
+                                let specObj = JSON.parse(specString);
+                                // write original version, then transform, then write transformed version
+                                fs.writeJson(specFile.replace(/\.json$/, '.apig.json'), specObj, {spaces: 2}).then(() => {
+                                    transformer.transform(specObj, domainNameObj, mapping);
+                                    return fs.writeJson(specFile, specObj, {spaces: 2});
+                                });
                                 hasSpecFileWritten = true;
                                 homePage.addApi(baseUrl, this.config.pathSpecFile(domainName, basePath));
                             }
@@ -71,32 +79,6 @@ export class Generator {
                                     .find(suffix => src.endsWith(suffix)) == null;
                        },
         });
-    }
-    
-    protected async writeSpecFile(specString: string, domain: string, basePath: string) {
-        const file = this.config.specFile(domain, basePath);
-        const specObject = JSON.parse(specString);
-
-        // remove unnecessary basePath variable
-        if (specObject.servers.length == 1) {
-            const server = specObject.servers[0];
-            const defaultBasePath = server.variables?.basePath?.default;
-            if (defaultBasePath && server.url) {
-                server.url = (server.url as string).replace('/{basePath}', defaultBasePath);
-                if (Object.keys(server.variables).length == 1) {
-                    delete server.variables;
-                }
-            }
-        }
-
-        // api_key
-        if (specObject.components?.securitySchemes?.api_key && !specObject.securityDefinitions) {
-            specObject.securityDefinitions = {
-                api_key: specObject.components?.securitySchemes?.api_key,
-            }
-        }
-
-        return fs.writeJson(file, specObject, {spaces: 2});
     }
     
     protected async emptyApiFolder() {
