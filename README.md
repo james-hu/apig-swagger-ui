@@ -30,6 +30,15 @@ You can use `--include` and `--exclude` flags to specify which domain/path to in
 
 Necessary transformation/hacking is in place for making sure API spec looks good in Swagger UI.
 
+Files generated are ready to be hosted as static website content in this structure:
+
+* `api/` - folder containing all OpenAPI 3 spec files
+  * `<domain>/` - folder containing OpenAPI 3 spec files under the same API Gateway custom domain name
+    * `<basePath>.apig.json` - original OpenAPI 3 spec file exported from API Gateway
+    * `<basePath>.json` - OpenAPI 3 spec file for SwaggerUI to consume. Necessary transformation/hacking has been applied for making sure the API spec looks good in Swagger UI.
+* `swagger-ui/` - standard swagger-ui html/js/css/png 
+* `index.html` - the home page / entry point
+
 ## Usage
 
 You can have it installed globally like this:
