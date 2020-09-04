@@ -1,7 +1,7 @@
 {
   "name": "apig-swagger-ui",
   "description": "Command line tool for generating OpenAPI spec and SwaggerUI from AWS API Gateway",
-  "version": "1.0.2",
+  "version": "1.0.3",
   "author": "James Hu",
   "bin": {
     "apig-swagger-ui": "./bin/run"
@@ -66,9 +66,9 @@
   "repository": "james-hu/apig-swagger-ui",
   "scripts": {
     "posttest": "eslint . --ext .ts --config .eslintrc",
-    "prepack": "rm -rf lib && tsc -b && oclif-dev readme && mocha --reporter min src/update-readme.ts",
+    "prepack": "rm -rf lib && tsc -b && oclif-dev readme",
     "test": "nyc --extension .ts mocha --forbid-only \"test/**/*.test.ts\"",
-    "version": "oclif-dev readme && mocha --reporter min src/update-readme.ts && git add README.md"
+    "version": "oclif-dev readme && git add README.md"
   },
   "types": "lib/index.d.ts"
 }
