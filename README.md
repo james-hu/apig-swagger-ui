@@ -13,6 +13,7 @@ Typical usage:
 ```sh-session
 $ npx apig-swagger-ui -r ap-southeast-2 -s
 npx: installed 92 in 9.635s
+Generating files to: api-doc
 Generating OpenAPI spec for: https://api.dev1.insights.example.domain.com/analytics
 Generating OpenAPI spec for: https://boi.uat1.env.example.domain.com/statement
 Generating OpenAPI spec for: https://catalog.tst1.env.example.domain.com/
@@ -25,6 +26,7 @@ Generating OpenAPI spec for: https://v1pde.uat1.env.example.domain.com/key
 Local server started. Ctrl-C to stop. Access URL: http://localhost:8001/
 ```
 
+You can use `--include` and `--exclude` flags to specify which domain/path to include and which to exclude.
 
 <!-- toc -->
 * [Usage](#usage)

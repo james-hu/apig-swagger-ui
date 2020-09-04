@@ -18,6 +18,7 @@ export class Generator {
         const apig = new APIGateway({region: this.config.options.flags.region});
         const domainNameObjects = (await apig.getDomainNames({limit: 500}).promise())?.items;
         if (domainNameObjects != null) {
+            this.config.info(`Generating files to: ${this.config.options.args.path}`);
             const copySwaggerUiPromise = this.copySwaggerUi();
             await this.emptyApiFolder();
             for (let domainNameObj of domainNameObjects) {
