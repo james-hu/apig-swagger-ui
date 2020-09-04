@@ -28,21 +28,27 @@ Local server started. Ctrl-C to stop. Access URL: http://localhost:8001/
 
 You can use `--include` and `--exclude` flags to specify which domain/path to include and which to exclude.
 
+Necessary transformation/hacking is in place for making sure API spec looks good in Swagger UI.
+
 ## Usage
 
-<!-- usage -->
+You can have it installed globally like this:
+
 ```sh-session
 $ npm install -g apig-swagger-ui
-$ apig-swagger-ui COMMAND
-running command...
-$ apig-swagger-ui (-v|--version|version)
-apig-swagger-ui/1.0.2 darwin-x64 node-v12.18.2
-$ apig-swagger-ui --help [COMMAND]
-USAGE
-  $ apig-swagger-ui COMMAND
+$ apig-swagger-ui ...
 ...
 ```
-<!-- usagestop -->
+
+Or, you can just invoke it with `npx`:
+
+```sh-session
+$ npx apig-swagger-ui ...
+...
+```
+
+By passing `-h` or `--help` to the command line, you can see the supported arguments and options.
+
 ## Arguments
 
 ```sh-session
