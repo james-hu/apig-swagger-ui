@@ -19,7 +19,7 @@ $ npm install -g apig-swagger-ui
 $ apig-swagger-ui COMMAND
 running command...
 $ apig-swagger-ui (-v|--version|version)
-apig-swagger-ui/1.0.0 darwin-x64 node-v12.18.2
+apig-swagger-ui/1.0.1 darwin-x64 node-v12.18.2
 $ apig-swagger-ui --help [COMMAND]
 USAGE
   $ apig-swagger-ui COMMAND
