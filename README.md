@@ -14,21 +14,31 @@ Typical usage:
 $ npx apig-swagger-ui -r ap-southeast-2 -s
 npx: installed 92 in 9.635s
 Generating files to: api-doc
-Generating OpenAPI spec for: https://api.dev1.insights.example.domain.com/analytics
-Generating OpenAPI spec for: https://boi.uat1.env.example.domain.com/statement
-Generating OpenAPI spec for: https://catalog.tst1.env.example.domain.com/
-Generating OpenAPI spec for: https://cis.uat1.env.example.domain.com/
-Generating OpenAPI spec for: https://leads.uat1.env.example.domain.com/v2
-Generating OpenAPI spec for: https://leads.uat1.env.example.domain.com/inbound
-Generating OpenAPI spec for: https://rulehub.uat1.env.example.domain.com/citizenship
-Generating OpenAPI spec for: https://toggle-feature-flag-datadog.uat1.env.example.domain.com/
-Generating OpenAPI spec for: https://v1pde.uat1.env.example.domain.com/key
+Generating OpenAPI spec for: https://api.dev1.insights.example.com/analytics
+Generating OpenAPI spec for: https://boi.example.com/statement
+Generating OpenAPI spec for: https://catalog.tst1.example.com/
+Generating OpenAPI spec for: https://cis.example.com/
+Generating OpenAPI spec for: https://leads.example.com/v2
+Generating OpenAPI spec for: https://leads.example.com/inbound
+Generating OpenAPI spec for: https://rulehub.example.com/citizenship
+Generating OpenAPI spec for: https://toggle-feature-flag-datadog.example.com/
+Generating OpenAPI spec for: https://v1pde.example.com/key
 Local server started. Ctrl-C to stop. Access URL: http://localhost:8001/
 ```
 
-You can use `--include` and `--exclude` flags to specify which domain/path to include and which to exclude.
+Command line option `-r ap-southeast-2` specifies AWS region,
+`-s` tells the command line to start up a local http server and then open the browser pointing to that local server for viewing generated website.
+
+If you don't want to include all custom domains and APIs,
+you can use `--include` and `--exclude` options to specify which domain/path to include and which to exclude.
+Both of them can have multiple appearances.
+
+For example, `--include 'leads*/*'` will make sure that only `https://leads.example.com/v2` and `https://leads.example.com/inbound` would be included.
+Make sure you have the pattern enclosed with `'`.
+`--include` is applied before `--exclude`, so that  `--include 'leads*/*' --exclude '*/v2'` will give you only `https://leads.example.com/inbound`.
 
 Necessary transformation/hacking is in place for making sure API spec looks good in Swagger UI.
+Feel free to let me know if you have any suggestions or needs, I would consider to add as new features.
 
 Files generated are ready to be hosted as static website content in this structure:
 
@@ -49,14 +59,14 @@ $ apig-swagger-ui ...
 ...
 ```
 
-Or, you can just invoke it with `npx`:
+Or, you can just invoke the latest version with `npx`:
 
 ```sh-session
 $ npx apig-swagger-ui ...
 ...
 ```
 
-By passing `-h` or `--help` to the command line, you can see the supported arguments and options.
+By passing `-h` or `--help` to the command line, you can see all supported arguments and options.
 
 ## Arguments
 
