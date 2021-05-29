@@ -49,7 +49,7 @@ Files generated are ready to be hosted as static website content in this structu
 * `swagger-ui/` - standard swagger-ui html/js/css/png 
 * `index.html` - the home page / entry point
 
-## Usage
+## Quick start
 
 You can have it installed globally like this:
 
@@ -68,22 +68,56 @@ $ npx apig-swagger-ui ...
 
 By passing `-h` or `--help` to the command line, you can see all supported arguments and options.
 
-## Arguments
+## Manual
 
-```sh-session
-  PATH  [default: api-doc] path for putting generated files
+<!-- help start -->
 ```
+USAGE
+  $ apig-swagger-ui [PATH]
 
-## Options
+ARGUMENTS
+  PATH  [default: api-doc] path for putting generated website files
 
-```sh-session
+OPTIONS
   -d, --debug            output debug messages
   -h, --help             show CLI help
-  -i, --include=include  [default: */*,*/] custom domains and base path mappings to include
+
+  -i, --include=include  [default: */*,*/] custom domains and base path mappings
+                         to include
+
   -p, --port=port        [default: 8001] port number of the local http server
+                         for preview
+
   -q, --quiet            no console output
+
   -r, --region=region    AWS region
-  -s, --server           start a local http server and open a browser for viewing generated files
+
+  -s, --server           start a local http server and open a browser for
+                         pre-viewing generated website
+
   -v, --version          show CLI version
+
   -x, --exclude=exclude  custom domains and base path mappings to exclude
+
+DESCRIPTION
+  This command line tool can generate a static website that you can host for 
+  serving Swagger UI of your API Gateway APIs.
+     It generates website files locally and can optionally launch a local server 
+  for you to preview.
+     Before running this tool, you need to log into your AWS account (through 
+  command line like aws, saml2aws, okta-aws, etc.) first.
+     Please note that only APIs that have been mapped to custom domains will be 
+  included in the website generated.
+
+EXAMPLES
+  apig-swagger-ui -r ap-southeast-2 -s
+  apig-swagger-ui -r ap-southeast-2 -s -i '*uat1*/*' -x 'datahub.uat1.*/*'
+  apig-swagger-ui -r ap-southeast-2 -s -i '*/key*' -i 'boi.stg.*/*'
 ```
+
+<!-- help end -->
+
+## For developers
+
+* Run for test: `./bin/run ...`
+* Release: `npm version patch -m "..."; npm publish`
