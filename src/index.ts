@@ -40,7 +40,7 @@ class ApigSwaggerUi extends Command {
   static examples = [
     '^ -r ap-southeast-2 -s',
     "^ -r ap-southeast-2 -s -i '*uat1*/*' -x 'datahub.uat1.*/*'",
-    "^ -r ap-southeast-2 -s -i '*/key*' -i 'boi.stg.*/*'",
+    "^ -r ap-southeast-2 -s -i '*/key*' -i 'boi.stg.*/*' path/to/api-doc/directory",
   ];
 
   protected async init() {
