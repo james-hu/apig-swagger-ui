@@ -29,7 +29,8 @@ class ApigSwaggerUi extends Command {
     quiet: flags.boolean({ char: 'q', description: 'no console output' }),
     debug: flags.boolean({ char: 'd', description: 'output debug messages' }),
 
-    validator: flags.string({ char: 'a', default: undefined, description: 'custom validator URL, or "none" for disabling validation' }),
+    'validator-url': flags.string({ char: 'a', default: undefined, description: 'custom validator URL, or "none" for disabling validation' }),
+    'enable-source-maps': flags.boolean({ char: 'm', default: true, description: 'include swagger-ui\'s source map files or not' }),
   };
 
   static args = [

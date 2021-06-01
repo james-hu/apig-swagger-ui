@@ -76,8 +76,13 @@ export class Generator {
     return fs.copy(SwaggerUIDist.getAbsoluteFSPath(), swaggerUiDestDir,
       {
         filter: (src, _dest) => {
-          return ['.md', 'package.json', 'index.js', 'absolute-path.js']
-                        .find(suffix => src.endsWith(suffix)) === undefined;
+          return [
+            '.md',
+            'package.json',
+            'index.js',
+            'absolute-path.js',
+            ...(this.context.options.flags['enable-source-maps'] ? [] : ['.map']),
+          ].find(suffix => src.endsWith(suffix)) === undefined;
         },
         preserveTimestamps: true,
       });

@@ -20,7 +20,7 @@ export class HomePage {
     this.apis.sort((a, b) => a.baseUrl.localeCompare(b.baseUrl));
     const urls = this.apis.map(api => ({ name: api.baseUrl, url: api.specFilePath }));
     const urlsText = JSON.stringify(urls, undefined, 2);
-    const validatorUrlText = JSON.stringify(this.context.options.flags.validator);
+    const validatorUrlText = JSON.stringify(this.context.options.flags['validator-url']);
 
     const basePath = this.context.basePathSwaggerUi;
     let html = fs.readFileSync(this.context.swaggerUiIndexFile).toString('utf8');
