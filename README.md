@@ -116,7 +116,7 @@ DESCRIPTION
 EXAMPLES
   apig-swagger-ui -r ap-southeast-2 -s
   apig-swagger-ui -r ap-southeast-2 -s -i '*uat1*/*' -x 'datahub.uat1.*/*'
-  apig-swagger-ui -r ap-southeast-2 -s -i '*/key*' -i 'boi.stg.*/*'
+  apig-swagger-ui -r ap-southeast-2 -s -i '*/key*' -i 'boi.stg.*/*' path/to/my/api-doc/directory
 ```
 
 <!-- help end -->
