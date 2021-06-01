@@ -37,6 +37,10 @@ For example, `--include 'leads*/*'` will make sure that only `https://leads.exam
 Make sure you have the pattern enclosed with `'`.
 `--include` is applied before `--exclude`, so that  `--include 'leads*/*' --exclude '*/v2'` will give you only `https://leads.example.com/inbound`.
 
+To match an endpoint URL without a base path, use patterns like `*.example.*/` which matches `https://cis.example.com/`.
+Please note that `*.example.*/*` does not match `https://cis.example.com/`.
+This applies to both inclusion and exclusion.
+
 Necessary transformation/hacking is in place for making sure API spec looks good in Swagger UI.
 Feel free to let me know if you have any suggestions or needs, I would consider to add as new features.
 
