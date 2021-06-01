@@ -79,6 +79,7 @@ export class Generator {
           return ['.md', 'package.json', 'index.js', 'absolute-path.js']
                         .find(suffix => src.endsWith(suffix)) === undefined;
         },
+        preserveTimestamps: true,
       });
   }
 
