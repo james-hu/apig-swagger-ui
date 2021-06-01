@@ -83,25 +83,33 @@ ARGUMENTS
   PATH  [default: api-doc] path for putting generated website files
 
 OPTIONS
-  -d, --debug            output debug messages
-  -h, --help             show CLI help
+  -a, --validator-url=validator-url  custom validator URL, or "none" for
+                                     disabling validation
 
-  -i, --include=include  [default: */*,*/] custom domains and base path mappings
-                         to include
+  -d, --debug                        output debug messages
 
-  -p, --port=port        [default: 8001] port number of the local http server
-                         for preview
+  -h, --help                         show CLI help
 
-  -q, --quiet            no console output
+  -i, --include=include              [default: */*,*/] custom domains and base
+                                     path mappings to include
 
-  -r, --region=region    AWS region
+  -m, --enable-source-maps           include swagger-ui's source map files or
+                                     not
 
-  -s, --server           start a local http server and open a browser for
-                         pre-viewing generated website
+  -p, --port=port                    [default: 8001] port number of the local
+                                     http server for preview
 
-  -v, --version          show CLI version
+  -q, --quiet                        no console output
 
-  -x, --exclude=exclude  custom domains and base path mappings to exclude
+  -r, --region=region                AWS region
+
+  -s, --server                       start a local http server and open a
+                                     browser for pre-viewing generated website
+
+  -v, --version                      show CLI version
+
+  -x, --exclude=exclude              custom domains and base path mappings to
+                                     exclude
 
 DESCRIPTION
   This command line tool can generate a static website that you can host for 
@@ -116,7 +124,8 @@ DESCRIPTION
 EXAMPLES
   apig-swagger-ui -r ap-southeast-2 -s
   apig-swagger-ui -r ap-southeast-2 -s -i '*uat1*/*' -x 'datahub.uat1.*/*'
-  apig-swagger-ui -r ap-southeast-2 -s -i '*/key*' -i 'boi.stg.*/*' path/to/my/api-doc/directory
+  apig-swagger-ui -r ap-southeast-2 -s -i '*/key*' -i 'boi.stg.*/*' 
+  path/to/api-doc/directory
 ```
 
 <!-- help end -->
