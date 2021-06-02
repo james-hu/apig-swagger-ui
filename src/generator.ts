@@ -4,6 +4,7 @@
 import * as fs from 'fs-extra';
 import * as SwaggerUIDist from 'swagger-ui-dist';
 import micromatch = require('micromatch');
+import { withRetry } from '@handy-common-utils/aws-utils';
 import { APIGateway } from 'aws-sdk';
 import { HomePage } from './home-page';
 import { Context } from './context';
@@ -18,7 +19,7 @@ export class Generator {
     const transformer = new Transformer(this.context);
 
     const apig = new APIGateway({ region: this.context.options.flags.region });
-    const domainNameObjects = (await apig.getDomainNames({ limit: 500 }).promise())?.items;
+    const domainNameObjects = (await withRetry(() => apig.getDomainNames({ limit: 500 }).promise()))?.items;
     if (domainNameObjects != null) {
       this.context.info(`Generating files to: ${this.context.options.args.path}`);
       const copySwaggerUiPromise = this.copySwaggerUi();
@@ -27,7 +28,7 @@ export class Generator {
         const domainName = domainNameObj.domainName!;
         this.context.debug(`Found custom domain: ${domainName}`);
         const supportHttps = domainNameObj.securityPolicy != null;
-        const mappings = (await apig.getBasePathMappings({ domainName, limit: 500 }).promise())?.items;
+        const mappings = (await withRetry(() => apig.getBasePathMappings({ domainName, limit: 500 }).promise()))?.items;
         if (mappings != null) {
           await this.emptyDomainFolder(domainName);
           let hasSpecFileWritten = false;
@@ -40,12 +41,12 @@ export class Generator {
             if (shouldInclude && !shouldExclude) {
               const baseUrl = `${supportHttps ? 'https' : 'http'}://${domainAndBasePath}`;
               this.context.info(`Generating OpenAPI spec for: ${baseUrl}`);
-              const exported = await apig.getExport({
+              const exported = await withRetry(() => apig.getExport({
                 restApiId: mapping.restApiId!,
                 stageName: mapping.stage!,
                 exportType: 'oas30',
                 parameters: {},
-              }).promise();
+              }).promise());
               const specString = exported.body?.toString('utf8');
               if (specString != null) {
                 const specFile = this.context.specFile(domainName, basePath);
