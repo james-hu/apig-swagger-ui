@@ -8,7 +8,7 @@
   },
   "bugs": "https://github.com/james-hu/apig-swagger-ui/issues",
   "dependencies": {
-    "@handy-common-utils/aws-utils": "^1.0.4",
+    "@handy-common-utils/aws-utils": "^1.0.5",
     "@handy-common-utils/oclif-utils": "^1.0.3",
     "@oclif/command": "^1.8.0",
     "@oclif/config": "^1.17.0",
