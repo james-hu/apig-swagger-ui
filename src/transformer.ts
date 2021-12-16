@@ -98,7 +98,9 @@ export class Transformer {
     }
 
     // if x-api-key header has been ever mentioned
-    let xApiKeyParameterFound = false;
+    let xApiKeyHeaderParameter: string|null = null;
+    // if api_key query parameter has been ever mentioned
+    let apiKeyQueryParameter: string|null = null;
     Object.entries(doc.paths).forEach(([path, pathItem]) => {
       Object.entries(pathItem)
                 .map(([key, value]) => { // not all values are actually OperationObject
@@ -129,41 +131,61 @@ export class Transformer {
                     operationObj!.parameters = operationObj!.parameters!.filter(refOrParam => {
                       const param = refOrParam as Extract<OpenApiDocumentReferenceOrParameterObject, {name: string; in: string}>;
                       if (param.name && param.name.toLowerCase() === 'x-api-key' && param.in === 'header') {
-                        this.context.debug(`Use api_key authentication for ${domainAndBasePath}${path}`);
-                        xApiKeyParameterFound = true;
-                        return false;
+                        this.context.debug(`Use xApiKeyHeader (${param.name} in ${param.in}) authentication for ${domainAndBasePath}${path}`);
+                        xApiKeyHeaderParameter = param.name;
+                        operationObj!.security = operationObj!.security ?? [];
+                        operationObj!.security.push({
+                          xApiKeyHeader: [],
+                        });
+                        // return false;
+                      }
+                      if (param.name && param.name.toLowerCase() === 'api_key' && param.in === 'query') {
+                        this.context.debug(`Use apiKeyParam (${param.name} in ${param.in}) authentication for ${domainAndBasePath}${path}`);
+                        apiKeyQueryParameter = param.name;
+                        operationObj!.security = operationObj!.security ?? [];
+                        operationObj!.security.push({
+                          apiKeyParam: [],
+                        });
+                        // return false;
                       }
                       return true;
                     });
                 });
     });
-    if (xApiKeyParameterFound && !doc.components?.securitySchemes?.api_key) {
-      this.context.debug(`Add api_key authentication for ${domainAndBasePath}`);
+
+    if (!doc.components) {
+      doc.components = {};
+    }
+    if (!doc.components.securitySchemes) {
+      doc.components.securitySchemes = {};
+    }
+    if (xApiKeyHeaderParameter && !doc.components?.securitySchemes?.xApiKeyHeader) {
+      this.context.debug(`Add xApiKeyHeader authentication for ${domainAndBasePath}`);
       const apiKeyDef = {
-        type: 'apiKey',
-        name: 'x-api-key',
+        type: 'apiKey' as const,
+        name: xApiKeyHeaderParameter,
         in: 'header',
+        description: `API key in header ${xApiKeyHeaderParameter}`,
       };
-
-      if (!doc.components) {
-        doc.components = {};
-      }
-      if (!doc.components.securitySchemes) {
-        doc.components.securitySchemes = {};
-      }
-      // eslint-disable-next-line camelcase
-      doc.components.securitySchemes.api_key = apiKeyDef as any;
+      doc.components.securitySchemes.xApiKeyHeader = apiKeyDef;
+    }
+    if (apiKeyQueryParameter && !doc.components?.securitySchemes?.apiKeyParam) {
+      this.context.debug(`Add apiKeyParam authentication for ${domainAndBasePath}`);
+      const apiKeyDef = {
+        type: 'apiKey' as const,
+        name: apiKeyQueryParameter,
+        in: 'query',
+        description: `API key in query string parameter "${apiKeyQueryParameter}"`,
+      };
+      doc.components.securitySchemes.apiKeyParam = apiKeyDef;
     }
 
-    // api_key in securityDefinitions (is this a V2 compatibility thing?)
-    if (doc.components?.securitySchemes?.api_key && !doc.securityDefinitions) {
-      this.context.debug(`Set securityDefinitions for ${domainAndBasePath}`);
-      doc.securityDefinitions = {
-        // eslint-disable-next-line camelcase
-        api_key: doc.components?.securitySchemes?.api_key as unknown as any,
-      };
-    }
-    // ensure
+    // in securityDefinitions (is this a V2 compatibility thing?)
+    this.context.debug(`Set securityDefinitions for ${domainAndBasePath}`);
+    doc.securityDefinitions = {
+      ...doc.securityDefinitions,
+      ...doc.components?.securitySchemes as any,
+    };
   }
 }
 
