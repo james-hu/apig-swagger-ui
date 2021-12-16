@@ -102,6 +102,11 @@ export class Transformer {
     // if api_key query parameter has been ever mentioned
     let apiKeyQueryParameter: string|null = null;
     Object.entries(doc.paths).forEach(([path, pathItem]) => {
+      // if "options" is not the only method, delete it because it must be there just for facilitating CORS
+      if (Object.keys(pathItem).length > 1) {
+        delete pathItem.options;
+      }
+
       Object.entries(pathItem)
                 .map(([key, value]) => { // not all values are actually OperationObject
                   const operationObject = value as OpenApiDocumentOperationObject;
