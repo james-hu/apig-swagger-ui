@@ -9,7 +9,6 @@ interface Api {
 export class HomePage {
   private apis: Api[] = [];
 
-  // eslint-disable-next-line no-useless-constructor
   constructor(private context: Context) {}
 
   addApi(baseUrl: string, specFilePath: string) {

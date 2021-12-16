@@ -62,7 +62,7 @@ class ApigSwaggerUi extends Command {
 
     try {
       await this.doRun(context);
-    } catch (error) {
+    } catch (error: any) {
       context.debug(error);
       if (typeof error.code === 'string' && error.code.startsWith('ExpiredToken')) {
         context.info('Did you forget to log into AWS? Please log into your AWS account and try again.');

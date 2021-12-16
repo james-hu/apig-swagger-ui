@@ -1,6 +1,3 @@
-/* eslint-disable unicorn/no-null */
-/* eslint-disable no-await-in-loop */
-/* eslint-disable max-depth */
 import * as fs from 'fs-extra';
 import * as SwaggerUIDist from 'swagger-ui-dist';
 import micromatch = require('micromatch');
@@ -11,7 +8,6 @@ import { Context } from './context';
 import { Transformer } from './transformer';
 
 export class Generator {
-  // eslint-disable-next-line no-useless-constructor
   constructor(protected context: Context) {}
 
   async generate() {
@@ -74,19 +70,18 @@ export class Generator {
   protected async copySwaggerUi() {
     const swaggerUiDestDir = this.context.swaggerUiFolder;
     await fs.emptyDir(swaggerUiDestDir);
-    return fs.copy(SwaggerUIDist.getAbsoluteFSPath(), swaggerUiDestDir,
-      {
-        filter: (src, _dest) => {
-          return [
-            '.md',
-            'package.json',
-            'index.js',
-            'absolute-path.js',
-            ...(this.context.options.flags['enable-source-maps'] ? [] : ['.map']),
-          ].find(suffix => src.endsWith(suffix)) === undefined;
-        },
-        preserveTimestamps: true,
-      });
+    return fs.copy(SwaggerUIDist.getAbsoluteFSPath(), swaggerUiDestDir, {
+      filter: (src, _dest) => {
+        return ![
+          '.md',
+          'package.json',
+          'index.js',
+          'absolute-path.js',
+          ...(this.context.options.flags['enable-source-maps'] ? [] : ['.map']),
+        ].some(suffix => src.endsWith(suffix));
+      },
+      preserveTimestamps: true,
+    });
   }
 
   protected async emptyApiFolder() {

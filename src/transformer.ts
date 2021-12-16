@@ -1,4 +1,3 @@
-/* eslint-disable unicorn/no-null */
 /* eslint-disable unicorn/no-array-for-each */
 import { Context } from './context';
 import { OpenAPIV3, OpenAPIV2 } from 'openapi-types';
@@ -73,7 +72,6 @@ const defaultStandardResponses: OpenApiDocumentResponsesObject = {
 };
 
 export class Transformer {
-  // eslint-disable-next-line no-useless-constructor
   constructor(private context: Context) {}
 
   /**
@@ -153,6 +151,7 @@ export class Transformer {
       if (!doc.components.securitySchemes) {
         doc.components.securitySchemes = {};
       }
+      // eslint-disable-next-line camelcase
       doc.components.securitySchemes.api_key = apiKeyDef as any;
     }
 
@@ -160,6 +159,7 @@ export class Transformer {
     if (doc.components?.securitySchemes?.api_key && !doc.securityDefinitions) {
       this.context.debug(`Set securityDefinitions for ${domainAndBasePath}`);
       doc.securityDefinitions = {
+        // eslint-disable-next-line camelcase
         api_key: doc.components?.securitySchemes?.api_key as unknown as any,
       };
     }
