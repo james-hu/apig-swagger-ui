@@ -114,11 +114,11 @@ OPTIONS
 DESCRIPTION
   This command line tool can generate a static website that you can host for 
   serving Swagger UI of your API Gateway APIs.
-     It generates website files locally and can optionally launch a local server 
+    It generates website files locally and can optionally launch a local server 
   for you to preview.
-     Before running this tool, you need to log into your AWS account (through 
+    Before running this tool, you need to log into your AWS account (through 
   command line like aws, saml2aws, okta-aws, etc.) first.
-     Please note that only APIs that have been mapped to custom domains will be 
+    Please note that only APIs that have been mapped to custom domains will be 
   included in the website generated.
 
 EXAMPLES
