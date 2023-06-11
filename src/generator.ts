@@ -15,6 +15,7 @@ export class Generator {
     const transformer = new Transformer(this.context);
 
     const apig = new APIGateway({ region: this.context.options.flags.region });
+    // eslint-disable-next-line unicorn/no-await-expression-member
     const domainNameObjects = (await withRetry(() => apig.getDomainNames({ limit: 500 }).promise()))?.items;
     if (domainNameObjects != null) {
       this.context.info(`Generating files to: ${this.context.options.args.path}`);
@@ -24,6 +25,7 @@ export class Generator {
         const domainName = domainNameObj.domainName!;
         this.context.debug(`Found custom domain: ${domainName}`);
         const supportHttps = domainNameObj.securityPolicy != null;
+        // eslint-disable-next-line unicorn/no-await-expression-member
         const mappings = (await withRetry(() => apig.getBasePathMappings({ domainName, limit: 500 }).promise()))?.items;
         if (mappings != null) {
           await this.emptyDomainFolder(domainName);
