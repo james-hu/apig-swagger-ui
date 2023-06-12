@@ -26,7 +26,7 @@ const defaultStandardResponses: OpenApiDocumentResponsesObject = {
     content: {},
   },
   204: {
-    description: 'No Content. The server has fulfilled the request but does not need to return an entity-body, and might want to return updated metainformation.',
+    description: 'No Content. The server has fulfilled the request but does not need to return an entity-body, and might want to return updated meta information.',
     content: {},
   },
   400: {
