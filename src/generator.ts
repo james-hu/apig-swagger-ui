@@ -2,7 +2,7 @@ import * as fs from 'fs-extra';
 import * as SwaggerUIDist from 'swagger-ui-dist';
 import micromatch = require('micromatch');
 import { withRetry } from '@handy-common-utils/aws-utils';
-import { APIGateway } from 'aws-sdk';
+import { APIGateway, ApiGatewayV2 } from 'aws-sdk';
 import { HomePage } from './home-page';
 import { Context } from './context';
 import { Transformer } from './transformer';
@@ -15,6 +15,7 @@ export class Generator {
     const transformer = new Transformer(this.context);
 
     const apig = new APIGateway({ region: this.context.options.flags.region });
+    const apig2 = new ApiGatewayV2({ region: this.context.options.flags.region });
     // eslint-disable-next-line unicorn/no-await-expression-member
     const domainNameObjects = (await withRetry(() => apig.getDomainNames({ limit: 500 }).promise()))?.items;
     if (domainNameObjects != null) {
@@ -26,12 +27,12 @@ export class Generator {
         this.context.debug(`Found custom domain: ${domainName}`);
         const supportHttps = domainNameObj.securityPolicy != null;
         // eslint-disable-next-line unicorn/no-await-expression-member
-        const mappings = (await withRetry(() => apig.getBasePathMappings({ domainName, limit: 500 }).promise()))?.items;
+        const mappings = (await withRetry(() => apig2.getApiMappings({ DomainName: domainName, MaxResults: '500' }).promise()))?.Items;
         if (mappings != null) {
           await this.emptyDomainFolder(domainName);
           let hasSpecFileWritten = false;
           for (const mapping of mappings) {
-            const basePath = mapping.basePath === '(none)' ? '' : mapping.basePath!;
+            const basePath = mapping.ApiMappingKey === '(none)' ? '' : mapping.ApiMappingKey!;
             const domainAndBasePath = `${domainName}/${basePath}`;
             const shouldInclude = micromatch.isMatch(domainAndBasePath, this.context.options.flags.include);
             const shouldExclude = this.context.options.flags.exclude == null ? false : micromatch.isMatch(domainAndBasePath, this.context.options.flags.exclude);
@@ -39,14 +40,24 @@ export class Generator {
             if (shouldInclude && !shouldExclude) {
               const baseUrl = `${supportHttps ? 'https' : 'http'}://${domainAndBasePath}`;
               this.context.info(`Generating OpenAPI spec for: ${baseUrl}`);
-              const exported = await withRetry(() => apig.getExport({
-                restApiId: mapping.restApiId!,
-                stageName: mapping.stage!,
+              const exportedForRestOrNull = withRetry(() => apig.getExport({
+                restApiId: mapping.ApiId!,
+                stageName: mapping.Stage!,
                 exportType: 'oas30',
                 parameters: {},
-              }).promise());
-              const specString = exported.body?.toString('utf8');
-              if (specString != null) {
+              }).promise())
+              .catch(() => null);
+              const exportedForHttpOrNull = withRetry(() => apig2.exportApi({
+                ApiId: mapping.ApiId!,
+                StageName: mapping.Stage!,
+                Specification: 'OAS30',
+                OutputType: 'JSON',
+              }).promise())
+              .catch(() => null);
+              const specString = (await exportedForRestOrNull ?? await exportedForHttpOrNull)?.body?.toString('utf8');
+              if (specString == null) {
+                this.context.info(`Can't find OpenAPI spec for: ${domainAndBasePath}`);
+              } else {
                 const specFile = this.context.specFile(domainName, basePath);
                 const specObj = JSON.parse(specString);
                 // write original version, then transform, then write transformed version

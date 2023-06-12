@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-array-for-each */
 import { Context } from './context';
 import { OpenAPIV3, OpenAPIV2 } from 'openapi-types';
-import { APIGateway } from 'aws-sdk';
+import { APIGateway, ApiGatewayV2 } from 'aws-sdk';
 
 export type OpenApiDocument = OpenAPIV3.Document & {
     securityDefinitions?: OpenAPIV2.Document['securityDefinitions'];
@@ -83,18 +83,23 @@ export class Transformer {
    * @param domainAndBasePath domain/path
    * @returns void
    */
-  transform(doc: OpenApiDocument, _domainNameObj: APIGateway.DomainName, _basePathMapping: APIGateway.BasePathMapping, domainAndBasePath: string): void {
+  transform(doc: OpenApiDocument, _domainNameObj: APIGateway.DomainName, _basePathMapping: APIGateway.BasePathMapping|ApiGatewayV2.ApiMapping, domainAndBasePath: string): void {
     // remove unnecessary basePath variable
     if (doc.servers && doc.servers.length === 1) {
       const server = doc.servers[0];
       const defaultBasePath = server.variables?.basePath?.default;
-      if (defaultBasePath && server.url) {
+      if (defaultBasePath != null && server.url) {
         server.url = (server.url as string).replace('/{basePath}', defaultBasePath);
         this.context.debug(`Simplify server URL for ${domainAndBasePath}: ${server.url}`);
         if (Object.keys(server.variables!).length === 1) {
           delete server.variables;
         }
       }
+    }
+
+    // swagger-ui renders tags in an exaggerated way
+    if (doc.tags) {
+      delete doc.tags;
     }
 
     // if x-api-key header has been ever mentioned
@@ -111,14 +116,14 @@ export class Transformer {
                 .map(([key, value]) => { // not all values are actually OperationObject
                   const operationObject = value as OpenApiDocumentOperationObject;
                   if (['get', 'put', 'post', 'delete', 'options', 'head', 'patch', 'trace'].includes(key)) {
-                    const operationLabel = `${key.toUpperCase()} ${domainAndBasePath}${path}`;
+                    const operationLabel = `${key.toUpperCase()} ${domainAndBasePath}${domainAndBasePath.endsWith('/') && path.startsWith('/') ? path.slice(1) : path}`;
                     // make sure there is a parameters array
                     if (operationObject.parameters == null) {
                       this.context.debug(`Add empty parameter list for ${operationLabel}`);
                       operationObject.parameters = [];
                     }
                     // make sure there is a responses array
-                    if (operationObject.responses == null) {
+                    if (operationObject.responses == null || (Object.keys(operationObject.responses).length === 1 && (operationObject.responses.default as any)?.description?.startsWith('Default response for '))) {
                       this.context.debug(`Add default standard response list for ${operationLabel}`);
                       operationObject.responses = defaultStandardResponses;
                     } else {
