@@ -1,8 +1,12 @@
 {
     "cSpell.words": [
         "apig",
+        "datahub",
         "fulfill",
+        "oclif",
         "openapi",
-        "OpenAPIV"
+        "OpenAPIV",
+        "preversion",
+        "rserver"
     ]
 }
