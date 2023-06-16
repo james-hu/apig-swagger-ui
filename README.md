@@ -130,7 +130,20 @@ EXAMPLES
 
 <!-- help end -->
 
-## For developers
+## Contributing
 
-* Run for test: `./bin/run ...`
-* Release: `npm version patch -m "..."; npm publish`
+Development:
+
+- Run for test: `./bin/run ...`
+- Release: `npm version patch && npm publish && git push --tags`
+
+Please ignore `main.go` and `go.mod` files.
+They exist only because we are using *goreleaser*.
+
+To build binaries for arm64 processors, you need a Linux machine, with binfmt and ldid installed:
+- https://hub.docker.com/r/tonistiigi/binfmt
+- https://stackoverflow.com/a/27769297
+
+To debug goreleaser:
+
+```GITHUB_TOKEN=<the-token> goreleaser release --skip-validate --rm-dist --debug```
