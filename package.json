@@ -56,8 +56,7 @@
       "bin/apig-swagger-ui"
     ],
     "assets": [
-      "node_modules/swagger-ui-dist",
-      "node_modules/open/xdg-open"
+      "node_modules/swagger-ui-dist"
     ],
     "outputPath": "pkg",
     "targets": [
@@ -81,9 +80,7 @@
     "pretest": "eslint . --ext .ts",
     "prepare": "shx rm -rf lib && tsc",
     "test": "nyc mocha",
-    "patch-open": "replace-in-file node_modules/open/index.js \"__dirname, *'xdg-open'\" \"__dirname, '.', 'xdg-open'\"",
-    "postinstall": "npm run patch-open",
-    "pkg": "npm run prepare && pkg --compress GZip . && shx cp node_modules/open/xdg-open pkg",
+    "pkg": "npm run prepare && pkg --compress GZip .",
     "preversion": "./bin/run --update-readme.md && git add README.md"
   },
   "types": "lib/index.d.ts",
