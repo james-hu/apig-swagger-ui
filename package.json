@@ -4,16 +4,17 @@
   "version": "1.2.0",
   "author": "James Hu",
   "bin": {
-    "apig-swagger-ui": "./bin/run"
+    "apig-swagger-ui": "./bin/apig-swagger-ui.js"
   },
   "bugs": "https://github.com/james-hu/apig-swagger-ui/issues",
   "dependencies": {
-    "@handy-common-utils/aws-utils": "^1.0.6",
-    "@handy-common-utils/oclif-utils": "^1.0.9",
-    "@oclif/command": "^1.8.15",
-    "@oclif/config": "^1.18.2",
-    "@oclif/plugin-help": "^5.1.10",
-    "aws-sdk": "^2.1046.0",
+    "@handy-common-utils/aws-utils": "^2.0.4",
+    "@handy-common-utils/oclif-utils": "^1.1.3",
+    "@oclif/core": "^1.9.0",
+    "@oclif/plugin-help": "^5.1.12",
+    "@oclif/plugin-plugins": "^2.1.0",
+    "aws-sdk": "^2.1148.0",
+    "fs-extra": "^9.0.1",
     "micromatch": "^4.0.2",
     "open": "^7.2.1",
     "openapi-types": "^7.0.1",
@@ -22,11 +23,12 @@
   },
   "devDependencies": {
     "@handy-common-utils/dev-dependencies-mocha": "^1.3.0",
-    "@oclif/dev-cli": "^1.26.10",
-    "@oclif/test": "^2.0.3",
-    "@types/fs-extra": "^8.1.1",
+    "@oclif/test": "^2.1.0",
+    "@types/fs-extra": "^8.1.2",
     "@types/micromatch": "^4.0.1",
-    "@types/swagger-ui-dist": "^3.30.1"
+    "@types/swagger-ui-dist": "^3.30.1",
+    "oclif": "^3.0.1",
+    "pkg": "^5.8.0"
   },
   "engines": {
     "node": ">=10.0.0"
@@ -48,14 +50,40 @@
   ],
   "license": "Apache 2.0",
   "main": "lib/index.js",
+  "pkg": {
+    "scripts": [
+      "lib/**/*.js",
+      "bin/apig-swagger-ui"
+    ],
+    "assets": [
+      "node_modules/swagger-ui-dist",
+      "node_modules/open/xdg-open"
+    ],
+    "outputPath": "pkg",
+    "targets": [
+      "node16-macos-x64",
+      "node16-macos-arm64",
+      "node16-linux-x64",
+      "node16-linux-arm64",
+      "node16-win-x64"
+    ]
+  },
   "oclif": {
-    "bin": "apig-swagger-ui"
+    "bin": "apig-swagger-ui",
+    "plugins": [
+      "@oclif/plugin-plugins",
+      "@oclif/plugin-help",
+      "@oclif/plugin-warn-if-update-available"
+    ]
   },
   "repository": "james-hu/apig-swagger-ui",
   "scripts": {
     "pretest": "eslint . --ext .ts",
     "prepare": "shx rm -rf lib && tsc",
     "test": "nyc mocha",
+    "patch-open": "replace-in-file node_modules/open/index.js \"__dirname, *'xdg-open'\" \"__dirname, '.', 'xdg-open'\"",
+    "postinstall": "npm run patch-open",
+    "pkg": "npm run prepare && pkg --compress GZip . && shx cp node_modules/open/xdg-open pkg",
     "preversion": "./bin/run --update-readme.md && git add README.md"
   },
   "types": "lib/index.d.ts",

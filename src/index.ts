@@ -1,9 +1,8 @@
-import { Command, flags } from '@oclif/command';
-import * as Parser from '@oclif/parser';
+import { Command, Flags } from '@oclif/core';
 import { Generator } from './generator';
 import { LocalServer } from './local-server';
 import { Context } from './context';
-import { OclifUtils } from '@handy-common-utils/oclif-utils';
+import { CommandOptions, OclifUtils } from '@handy-common-utils/oclif-utils';
 
 class ApigSwaggerUi extends Command {
   static Options: CommandOptions<typeof ApigSwaggerUi>;  // just to hold the type
@@ -14,23 +13,26 @@ class ApigSwaggerUi extends Command {
   Please note that only APIs that have been mapped to custom domains will be included in the website generated.`;
 
   static flags = {
-    version: flags.version({ char: 'v' }),
-    help: flags.help({ char: 'h' }),
-    'update-readme.md': flags.boolean({ hidden: true, description: 'For developers only, don\'t use' }),
+    version: Flags.version({ char: 'v' }),
+    help: { ...Flags.help({ char: 'h' }), parse: async (_: any, cmd: Command) => {
+      cmd.log(await OclifUtils.generateHelpText(cmd));
+      cmd.exit(0);
+    } },
+    'update-readme.md': Flags.boolean({ hidden: true, description: 'For developers only, don\'t use' }),
 
-    region: flags.string({ char: 'r', description: 'AWS region' }),
+    region: Flags.string({ char: 'r', description: 'AWS region' }),
 
-    include: flags.string({ char: 'i', default: ['*/*', '*/'], multiple: true, description: 'custom domains and base path mappings to include' }),
-    exclude: flags.string({ char: 'x', multiple: true, description: 'custom domains and base path mappings to exclude' }),
+    include: Flags.string({ char: 'i', default: ['*/*', '*/'], multiple: true, description: 'custom domains and base path mappings to include' }),
+    exclude: Flags.string({ char: 'x', multiple: true, description: 'custom domains and base path mappings to exclude' }),
 
-    server: flags.boolean({ char: 's', description: 'start a local http server and open a browser for pre-viewing generated website' }),
-    port: flags.integer({ char: 'p', default: 8001, description: 'port number of the local http server for preview' }),
+    server: Flags.boolean({ char: 's', description: 'start a local http server and open a browser for pre-viewing generated website' }),
+    port: Flags.integer({ char: 'p', default: 8001, description: 'port number of the local http server for preview' }),
 
-    quiet: flags.boolean({ char: 'q', description: 'no console output' }),
-    debug: flags.boolean({ char: 'd', description: 'output debug messages' }),
+    quiet: Flags.boolean({ char: 'q', description: 'no console output' }),
+    debug: Flags.boolean({ char: 'd', description: 'output debug messages' }),
 
-    'validator-url': flags.string({ char: 'a', default: undefined, description: 'custom validator URL, or "none" for disabling validation' }),
-    'enable-source-maps': flags.boolean({ char: 'm', default: true, description: 'include swagger-ui\'s source map files or not' }),
+    'validator-url': Flags.string({ char: 'a', default: undefined, description: 'custom validator URL, or "none" for disabling validation' }),
+    'enable-source-maps': Flags.boolean({ char: 'm', default: true, description: 'include swagger-ui\'s source map files or not' }),
   };
 
   static args = [
@@ -48,16 +50,16 @@ class ApigSwaggerUi extends Command {
     return super.init();
   }
 
-  async run(argv?: string[]) {
-    const options = this.parse<CommandFlags<typeof ApigSwaggerUi>, CommandArgs<typeof ApigSwaggerUi>>(ApigSwaggerUi, argv);
+  async run() {
+    const options = await this.parse(ApigSwaggerUi) as CommandOptions<typeof ApigSwaggerUi>;
     if (options.flags['update-readme.md']) {
       OclifUtils.injectHelpTextIntoReadmeMd(this);
       return;
     }
 
-    const reconstructedcommandLine = OclifUtils.reconstructCommandLine(this, options);
+    const reconstructedCommandLine = OclifUtils.reconstructCommandLine(this, options);
     const context = new Context(options);
-    context.debug('Command line: ', reconstructedcommandLine);
+    context.debug('Command line: ', reconstructedCommandLine);
     context.debug('Options: ', options);
 
     try {
@@ -84,11 +86,3 @@ class ApigSwaggerUi extends Command {
 }
 
 export = ApigSwaggerUi;
-
-type CommandFlags<T> = T extends Parser.Input<infer F> ? F : never
-type CommandArgNames<T> = T extends {name: infer A}[] ? A : never
-type CommandArgs<T extends {args: Array<{name: string}>}> = {
-  [x in CommandArgNames<T['args']>]: string;
-}
-type CommandOptions<T extends {args: Array<{name: string}>}> = Parser.Output<CommandFlags<T>, CommandArgs<T>>
-
