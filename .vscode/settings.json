@@ -1,12 +1,22 @@
 {
     "cSpell.words": [
         "apig",
+        "binfmt",
+        "cnqoj",
         "datahub",
         "fulfill",
+        "gitea",
+        "goreleaser",
+        "incpatch",
+        "ldid",
+        "modelines",
         "oclif",
         "openapi",
         "OpenAPIV",
+        "prerelease",
         "preversion",
-        "rserver"
+        "rserver",
+        "snapcraft",
+        "snapcrafts"
     ]
 }
