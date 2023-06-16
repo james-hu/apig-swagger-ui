@@ -11,8 +11,9 @@ describe('apig-swagger-ui', () => {
     expect(ctx.stdout).to.contain('apig-swagger-ui');
     expect(ctx.stdout).to.contain('USAGE');
     expect(ctx.stdout).to.contain('ARGUMENTS');
-    expect(ctx.stdout).to.contain('OPTIONS');
+    expect(ctx.stdout).to.contain('FLAGS');
     expect(ctx.stdout).to.contain('DESCRIPTION');
     expect(ctx.stdout).to.contain('EXAMPLES');
+    expect(ctx.stdout).to.contain('$ apig-swagger-ui');
   });
 });
