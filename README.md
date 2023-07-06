@@ -77,55 +77,51 @@ By passing `-h` or `--help` to the command line, you can see all supported argum
 <!-- help start -->
 ```
 USAGE
-  $ apig-swagger-ui [PATH]
+  $ apig-swagger-ui  [PATH] [-v] [-h] [-r <value>] [-i
+    <value>] [-x <value>] [-s] [-p <value>] [-q] [-d] [-a <value>] [-m]
 
 ARGUMENTS
   PATH  [default: api-doc] path for putting generated website files
 
-OPTIONS
-  -a, --validator-url=validator-url  custom validator URL, or "none" for
-                                     disabling validation
-
-  -d, --debug                        output debug messages
-
-  -h, --help                         show CLI help
-
-  -i, --include=include              [default: */*,*/] custom domains and base
-                                     path mappings to include
-
-  -m, --enable-source-maps           include swagger-ui's source map files or
-                                     not
-
-  -p, --port=port                    [default: 8001] port number of the local
-                                     http server for preview
-
-  -q, --quiet                        no console output
-
-  -r, --region=region                AWS region
-
-  -s, --server                       start a local http server and open a
-                                     browser for pre-viewing generated website
-
-  -v, --version                      show CLI version
-
-  -x, --exclude=exclude              custom domains and base path mappings to
-                                     exclude
+FLAGS
+  -a, --validator-url=<value>  custom validator URL, or "none" for disabling
+                               validation
+  -d, --debug                  output debug messages
+  -h, --help                   Show CLI help.
+  -i, --include=<value>...     [default: */*,*/] custom domains and base path
+                               mappings to include
+  -m, --enable-source-maps     include swagger-ui's source map files or not
+  -p, --port=<value>           [default: 8001] port number of the local http
+                               server for preview
+  -q, --quiet                  no console output
+  -r, --region=<value>         AWS region
+  -s, --server                 start a local http server and open a browser for
+                               pre-viewing generated website
+  -v, --version                Show CLI version.
+  -x, --exclude=<value>...     custom domains and base path mappings to exclude
 
 DESCRIPTION
-  This command line tool can generate a static website that you can host for 
+  Command line tool for generating OpenAPI spec and Swagger UI from AWS API
+  Gateway
+
+  This command line tool can generate a static website that you can host for
   serving Swagger UI of your API Gateway APIs.
-    It generates website files locally and can optionally launch a local server 
+
+  It generates website files locally and can optionally launch a local server
   for you to preview.
-    Before running this tool, you need to log into your AWS account (through 
+
+  Before running this tool, you need to log into your AWS account (through
   command line like aws, saml2aws, okta-aws, etc.) first.
-    Please note that only APIs that have been mapped to custom domains will be 
+
+  Please note that only APIs that have been mapped to custom domains will be
   included in the website generated.
 
 EXAMPLES
-  apig-swagger-ui -r ap-southeast-2 -s
-  apig-swagger-ui -r ap-southeast-2 -s -i '*uat1*/*' -x 'datahub.uat1.*/*'
-  apig-swagger-ui -r ap-southeast-2 -s -i '*/key*' -i 'boi.stg.*/*' 
-  path/to/api-doc/directory
+  $ apig-swagger-ui -r ap-southeast-2 -s
+
+  $ apig-swagger-ui -r ap-southeast-2 -s -i '*uat1*/*' -x 'datahub.uat1.*/*'
+
+  $ apig-swagger-ui -r ap-southeast-2 -s -i '*/key*' -i 'boi.stg.*/*' path/to/api-doc/directory
 ```
 
 <!-- help end -->

@@ -1,7 +1,7 @@
 {
   "name": "apig-swagger-ui",
   "description": "Command line tool for generating OpenAPI spec and SwaggerUI from AWS API Gateway",
-  "version": "1.2.0",
+  "version": "1.2.1",
   "author": "James Hu",
   "bin": {
     "apig-swagger-ui": "./bin/apig-swagger-ui.js"
