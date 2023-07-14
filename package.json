@@ -71,8 +71,7 @@
     "bin": "apig-swagger-ui",
     "plugins": [
       "@oclif/plugin-plugins",
-      "@oclif/plugin-help",
-      "@oclif/plugin-warn-if-update-available"
+      "@oclif/plugin-help"
     ]
   },
   "repository": "james-hu/apig-swagger-ui",
