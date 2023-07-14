@@ -109,11 +109,6 @@ snapcrafts:
       # The name of the app must be the same name as the binary built or the snapcraft name.
       apig-swagger-ui:
         command: "" # It seems empty means default
-        environment:
-          # Otherwise aws-sdk is not able to find those files
-          AWS_SDK_LOAD_CONFIG: 1
-          AWS_CONFIG_FILE: ~/.aws/config
-          AWS_SHARED_CREDENTIALS_FILE: ~/.aws/credentials
         plugs:
           - home
           - network
