@@ -5,6 +5,7 @@ import ApigSwaggerUi = require('.');
 export class Context {
     swaggerUiFolder: string;
     swaggerUiIndexFile: string;
+    swaggerUiInitializerJsFile: string;
     apiFolder: string;
     homePageFile: string;
 
@@ -14,6 +15,7 @@ export class Context {
         private pathHomePage = 'index.html') {
       this.swaggerUiFolder = path.join(this.options.args.path, this.basePathSwaggerUi);
       this.swaggerUiIndexFile = path.join(this.swaggerUiFolder, 'index.html');
+      this.swaggerUiInitializerJsFile = path.join(this.swaggerUiFolder, 'swagger-initializer.js');
       this.apiFolder = path.join(this.options.args.path, this.basePathApi);
       this.homePageFile = path.join(this.options.args.path, this.pathHomePage);
     }
