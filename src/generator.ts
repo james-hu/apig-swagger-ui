@@ -13,15 +13,25 @@ export class Generator {
   async generate() {
     const homePage = new HomePage(this.context);
     const transformer = new Transformer(this.context);
+    const regions = this.context.options.flags.region == null || this.context.options.flags.region.length === 0 ? [undefined] : this.context.options.flags.region;
 
-    const apig = new APIGateway({ region: this.context.options.flags.region });
-    const apig2 = new ApiGatewayV2({ region: this.context.options.flags.region });
+    this.context.info(`Clearing destination folder: ${this.context.options.args.path}`);
+    await this.emptyApiFolder();
+
+    for (const region of regions) {
+      await this.generateForOneRegion(homePage, transformer, region);
+    }
+
+    await this.copySwaggerUi();
+    await homePage.generate();
+  }
+
+  async generateForOneRegion(homePage: HomePage, transformer: Transformer, region?: string) {
+    const apig = new APIGateway({ region });
+    const apig2 = new ApiGatewayV2({ region });
     // eslint-disable-next-line unicorn/no-await-expression-member
     const domainNameObjects = (await withRetry(() => apig.getDomainNames({ limit: 500 }).promise()))?.items;
     if (domainNameObjects != null) {
-      this.context.info(`Generating files to: ${this.context.options.args.path}`);
-      const copySwaggerUiPromise = this.copySwaggerUi();
-      await this.emptyApiFolder();
       for (const domainNameObj of domainNameObjects) {
         const domainName = domainNameObj.domainName!;
         this.context.debug(`Found custom domain: ${domainName}`);
@@ -75,8 +85,6 @@ export class Generator {
           }
         }
       }
-      await copySwaggerUiPromise; // because we copy swagger-ui/index.html to home page and then modify it
-      await homePage.generate();
     }
   }
 

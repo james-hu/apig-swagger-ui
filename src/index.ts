@@ -20,7 +20,7 @@ class ApigSwaggerUi extends Command {
     } },
     'update-readme.md': Flags.boolean({ hidden: true, description: 'For developers only, don\'t use' }),
 
-    region: Flags.string({ char: 'r', description: 'AWS region' }),
+    region: Flags.string({ char: 'r', multiple: true, description: 'AWS region' }),
 
     include: Flags.string({ char: 'i', default: ['*/*', '*/'], multiple: true, description: 'custom domains and base path mappings to include' }),
     exclude: Flags.string({ char: 'x', multiple: true, description: 'custom domains and base path mappings to exclude' }),
@@ -41,7 +41,7 @@ class ApigSwaggerUi extends Command {
 
   static examples = [
     '^ -r ap-southeast-2 -s',
-    "^ -r ap-southeast-2 -s -i '*uat1*/*' -x 'datahub.uat1.*/*'",
+    "^ -r ap-southeast-2 -r us-east-1 -s -i '*uat1*/*' -x 'datahub.uat1.*/*'",
     "^ -r ap-southeast-2 -s -i '*/key*' -i 'boi.stg.*/*' path/to/api-doc/directory",
   ];
 
@@ -68,6 +68,9 @@ class ApigSwaggerUi extends Command {
       context.debug(error);
       if (typeof error.code === 'string' && error.code.startsWith('ExpiredToken')) {
         context.info('Did you forget to log into AWS? Please log into your AWS account and try again.');
+        context.info(`  ${error}`);
+      } else if (error.code === 'ConfigError' && typeof error.message === 'string' && error.message.startsWith('Missing region ')) {
+        context.info('Did you forget to specify AWS region? Please specify at least one region in the command line and try again.');
         context.info(`  ${error}`);
       } else {
         throw error;

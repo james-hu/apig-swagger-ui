@@ -13,7 +13,7 @@ Typical usage:
 ```sh-session
 $ npx apig-swagger-ui -r ap-southeast-2 -s
 npx: installed 92 in 9.635s
-Generating files to: api-doc
+Clearing destination folder: api-doc
 Generating OpenAPI spec for: https://api.dev1.insights.example.com/analytics
 Generating OpenAPI spec for: https://boi.example.com/statement
 Generating OpenAPI spec for: https://catalog.tst1.example.com/
@@ -28,6 +28,8 @@ Local server started. Ctrl-C to stop. Access URL: http://localhost:8001/
 
 Command line option `-r ap-southeast-2` specifies AWS region,
 `-s` tells the command line to start up a local http server and then open the browser pointing to that local server for viewing generated website.
+
+Multiple regions can be specified, in case you want to survey APIs in more than one region.
 
 If you don't want to include all custom domains and APIs,
 you can use `--include` and `--exclude` options to specify which domain/path to include and which to exclude.
