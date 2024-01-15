@@ -96,7 +96,7 @@ FLAGS
   -p, --port=<value>           [default: 8001] port number of the local http
                                server for preview
   -q, --quiet                  no console output
-  -r, --region=<value>         AWS region
+  -r, --region=<value>...      AWS region
   -s, --server                 start a local http server and open a browser for
                                pre-viewing generated website
   -v, --version                Show CLI version.
@@ -121,7 +121,7 @@ DESCRIPTION
 EXAMPLES
   $ apig-swagger-ui -r ap-southeast-2 -s
 
-  $ apig-swagger-ui -r ap-southeast-2 -s -i '*uat1*/*' -x 'datahub.uat1.*/*'
+  $ apig-swagger-ui -r ap-southeast-2 -r us-east-1 -s -i '*uat1*/*' -x 'datahub.uat1.*/*'
 
   $ apig-swagger-ui -r ap-southeast-2 -s -i '*/key*' -i 'boi.stg.*/*' path/to/api-doc/directory
 ```
