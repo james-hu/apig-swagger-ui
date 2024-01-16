@@ -98,8 +98,9 @@ or manual download (https://github.com/james-hu/apig-swagger-ui/releases for Win
 <!-- help start -->
 ```
 USAGE
-  $ apig-swagger-ui  [PATH] [-v] [-h] [-r <value>] [-i
-    <value>] [-x <value>] [-s] [-p <value>] [-q] [-d] [-a <value>] [-m]
+  $ apig-swagger-ui  [PATH] [-v] [-h] [-r <value>] [-k
+    <value>] [-e <value>] [-t <value>] [-i <value>] [-x <value>] [-s] [-p
+    <value>] [-q] [-d] [-a <value>] [-m]
 
 ARGUMENTS
   PATH  [default: api-doc] path for putting generated website files
@@ -108,9 +109,11 @@ FLAGS
   -a, --validator-url=<value>  custom validator URL, or "none" for disabling
                                validation
   -d, --debug                  output debug messages
+  -e, --secret=<value>         AWS secret access key
   -h, --help                   Show CLI help.
   -i, --include=<value>...     [default: */*,*/] custom domains and base path
                                mappings to include
+  -k, --key=<value>            AWS access key ID
   -m, --enable-source-maps     include swagger-ui's source map files or not
   -p, --port=<value>           [default: 8001] port number of the local http
                                server for preview
@@ -118,6 +121,7 @@ FLAGS
   -r, --region=<value>...      AWS region
   -s, --server                 start a local http server and open a browser for
                                pre-viewing generated website
+  -t, --token=<value>          AWS session token
   -v, --version                Show CLI version.
   -x, --exclude=<value>...     custom domains and base path mappings to exclude
 
