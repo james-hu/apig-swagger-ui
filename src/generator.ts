@@ -27,8 +27,9 @@ export class Generator {
   }
 
   async generateForOneRegion(homePage: HomePage, transformer: Transformer, region?: string) {
-    const apig = new APIGateway({ region });
-    const apig2 = new ApiGatewayV2({ region });
+    const awsClientConfig = { region, credentials: this.context.awsCredentialsOption };
+    const apig = new APIGateway(awsClientConfig);
+    const apig2 = new ApiGatewayV2(awsClientConfig);
     // eslint-disable-next-line unicorn/no-await-expression-member
     const domainNameObjects = (await withRetry(() => apig.getDomainNames({ limit: 500 }).promise()))?.items;
     if (domainNameObjects != null) {

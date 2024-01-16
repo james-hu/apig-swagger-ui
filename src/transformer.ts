@@ -1,7 +1,7 @@
 /* eslint-disable unicorn/no-array-for-each */
 import { Context } from './context';
 import { OpenAPIV3, OpenAPIV2 } from 'openapi-types';
-import { APIGateway, ApiGatewayV2 } from 'aws-sdk';
+import type { APIGateway, ApiGatewayV2 } from 'aws-sdk';
 
 export type OpenApiDocument = OpenAPIV3.Document & {
     securityDefinitions?: OpenAPIV2.Document['securityDefinitions'];

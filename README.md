@@ -57,6 +57,8 @@ Files generated are ready to be hosted as static website content in this structu
 
 ## Quick start
 
+### In Node.js environment
+
 You can have it installed globally like this:
 
 ```sh-session
@@ -73,6 +75,23 @@ $ npx apig-swagger-ui ...
 ```
 
 By passing `-h` or `--help` to the command line, you can see all supported arguments and options.
+
+It can also be used in your own code, like this:
+
+```javascript
+import ApigSwaggerUi from 'apig-swagger-ui';
+
+class Generator extends ApigSwaggerUi {
+  argv: string[] = ['api-doc/prod', '-r', 'ap-southeast-2'];
+}
+await Generator.run();
+```
+
+### Install pre-built binary
+
+*apig-swagger-ui* can be installed through Homebrew (brew install handy-common-utils/tap/apig-swagger-ui for Linux or MacOS),
+snap (snap install apig-swagger-ui for Linux except WSL),
+or manual download (https://github.com/james-hu/apig-swagger-ui/releases for Windows, Linux, and MacOS ).
 
 ## Manual
 

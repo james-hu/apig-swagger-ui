@@ -1,8 +1,10 @@
 // eslint-disable-next-line unicorn/import-style, unicorn/prefer-node-protocol
 import * as path from 'path';
 import ApigSwaggerUi = require('.');
+import type { CredentialsOptions } from 'aws-sdk/lib/credentials';
 
 export class Context {
+    awsCredentialsOption?: CredentialsOptions;
     swaggerUiFolder: string;
     swaggerUiIndexFile: string;
     swaggerUiInitializerJsFile: string;
@@ -18,6 +20,16 @@ export class Context {
       this.swaggerUiInitializerJsFile = path.join(this.swaggerUiFolder, 'swagger-initializer.js');
       this.apiFolder = path.join(this.options.args.path, this.basePathApi);
       this.homePageFile = path.join(this.options.args.path, this.pathHomePage);
+
+      const accessKeyId = this.options.flags.key;
+      const secretAccessKey = this.options.flags.secret;
+      const sessionToken = this.options.flags.token;
+
+      this.awsCredentialsOption = (accessKeyId && secretAccessKey) ? {
+        accessKeyId,
+        secretAccessKey,
+        sessionToken,
+      } : undefined;
     }
 
     domainFolder(domain: string) {

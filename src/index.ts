@@ -21,6 +21,9 @@ class ApigSwaggerUi extends Command {
     'update-readme.md': Flags.boolean({ hidden: true, description: 'For developers only, don\'t use' }),
 
     region: Flags.string({ char: 'r', multiple: true, description: 'AWS region' }),
+    key: Flags.string({ char: 'k', description: 'AWS access key ID' }),
+    secret: Flags.string({ char: 'e', description: 'AWS secret access key' }),
+    token: Flags.string({ char: 't', description: 'AWS session token' }),
 
     include: Flags.string({ char: 'i', default: ['*/*', '*/'], multiple: true, description: 'custom domains and base path mappings to include' }),
     exclude: Flags.string({ char: 'x', multiple: true, description: 'custom domains and base path mappings to exclude' }),
