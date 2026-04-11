@@ -1,7 +1,8 @@
 /* eslint-disable unicorn/no-array-for-each */
 import { Context } from './context';
 import { OpenAPIV3, OpenAPIV2 } from 'openapi-types';
-import type { APIGateway, ApiGatewayV2 } from 'aws-sdk';
+import { DomainName, BasePathMapping } from '@aws-sdk/client-api-gateway';
+import { ApiMapping } from '@aws-sdk/client-apigatewayv2';
 
 export type OpenApiDocument = OpenAPIV3.Document & {
     securityDefinitions?: OpenAPIV2.Document['securityDefinitions'];
@@ -83,7 +84,7 @@ export class Transformer {
    * @param domainAndBasePath domain/path
    * @returns void
    */
-  transform(doc: OpenApiDocument, _domainNameObj: APIGateway.DomainName, _basePathMapping: APIGateway.BasePathMapping|ApiGatewayV2.ApiMapping, domainAndBasePath: string): void {
+  transform(doc: OpenApiDocument, _domainNameObj: DomainName, _basePathMapping: BasePathMapping | ApiMapping, domainAndBasePath: string): void {
     // remove unnecessary basePath variable
     if (doc.servers && doc.servers.length === 1) {
       const server = doc.servers[0];

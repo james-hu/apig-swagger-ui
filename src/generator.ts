@@ -2,7 +2,8 @@ import * as fs from 'fs-extra';
 import * as SwaggerUIDist from 'swagger-ui-dist';
 import micromatch = require('micromatch');
 import { withRetry } from '@handy-common-utils/aws-utils';
-import { APIGateway, ApiGatewayV2 } from 'aws-sdk';
+import { APIGateway } from '@aws-sdk/client-api-gateway';
+import { ApiGatewayV2 } from '@aws-sdk/client-apigatewayv2';
 import { HomePage } from './home-page';
 import { Context } from './context';
 import { Transformer } from './transformer';
@@ -31,14 +32,14 @@ export class Generator {
     const apig = new APIGateway(awsClientConfig);
     const apig2 = new ApiGatewayV2(awsClientConfig);
     // eslint-disable-next-line unicorn/no-await-expression-member
-    const domainNameObjects = (await withRetry(() => apig.getDomainNames({ limit: 500 }).promise()))?.items;
+    const domainNameObjects = (await withRetry(() => apig.getDomainNames({ limit: 500 })))?.items;
     if (domainNameObjects != null) {
       for (const domainNameObj of domainNameObjects) {
         const domainName = domainNameObj.domainName!;
         this.context.debug(`Found custom domain: ${domainName}`);
         const supportHttps = domainNameObj.securityPolicy != null;
         // eslint-disable-next-line unicorn/no-await-expression-member
-        const mappings = (await withRetry(() => apig2.getApiMappings({ DomainName: domainName, MaxResults: '500' }).promise()))?.Items;
+        const mappings = (await withRetry(() => apig2.getApiMappings({ DomainName: domainName, MaxResults: '500' })))?.Items;
         if (mappings != null) {
           await this.emptyDomainFolder(domainName);
           let hasSpecFileWritten = false;
@@ -56,16 +57,17 @@ export class Generator {
                 stageName: mapping.Stage!,
                 exportType: 'oas30',
                 parameters: {},
-              }).promise())
+              }))
               .catch(() => null);
               const exportedForHttpOrNull = withRetry(() => apig2.exportApi({
                 ApiId: mapping.ApiId!,
                 StageName: mapping.Stage!,
                 Specification: 'OAS30',
                 OutputType: 'JSON',
-              }).promise())
+              }))
               .catch(() => null);
-              const specString = (await exportedForRestOrNull ?? await exportedForHttpOrNull)?.body?.toString('utf8');
+              const exportedBody = (await exportedForRestOrNull ?? await exportedForHttpOrNull)?.body;
+              const specString = exportedBody == null ? null : Buffer.from(exportedBody).toString('utf8');
               if (specString == null) {
                 this.context.info(`Can't find OpenAPI spec for: ${domainAndBasePath}`);
               } else {
