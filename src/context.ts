@@ -1,10 +1,10 @@
 // eslint-disable-next-line unicorn/import-style, unicorn/prefer-node-protocol
 import * as path from 'path';
 import ApigSwaggerUi = require('.');
-import type { CredentialsOptions } from 'aws-sdk/lib/credentials';
+import type { AwsCredentialIdentity } from '@aws-sdk/types';
 
 export class Context {
-    awsCredentialsOption?: CredentialsOptions;
+    awsCredentialsOption?: AwsCredentialIdentity;
     swaggerUiFolder: string;
     swaggerUiIndexFile: string;
     swaggerUiInitializerJsFile: string;
