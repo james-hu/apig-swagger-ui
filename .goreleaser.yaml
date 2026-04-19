@@ -82,7 +82,7 @@ snapcrafts:
     # Defaults to false.
     publish: true
 
-    summary: A command-line tool for visualisation of AWS serverless (Lambda, API Gateway, SNS, SQS, etc.) dataflow
+    summary: Generate OpenAPI spec and Swagger UI from AWS API Gateway via CLI
     description: For more information, see https://github.com/james-hu/apig-swagger-ui
 
     grade: stable
