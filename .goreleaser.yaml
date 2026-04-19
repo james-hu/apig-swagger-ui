@@ -39,6 +39,7 @@ homebrew_casks:  # push to github.com/handy-common-utils/homebrew-tap
     repository:
       owner: handy-common-utils
       name: homebrew-tap
+      token: "{{ .Env.HOMEBREW_TAP_TOKEN }}"
 
     # Template for the url which is determined by the given Token (github,
     # gitlab or gitea)
