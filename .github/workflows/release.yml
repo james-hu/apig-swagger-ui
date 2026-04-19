@@ -12,10 +12,10 @@ jobs:
   test-and-build:
     runs-on: ubuntu-latest
     steps:
-    - uses: actions/checkout@v3
-    - uses: actions/setup-node@v3
+    - uses: actions/checkout@v6
+    - uses: actions/setup-node@v6
       with:
-        node-version-file: package.json
+        node-version-file: .nvmrc
         cache: 'npm'
         cache-dependency-path: |
           package.json
@@ -33,7 +33,7 @@ jobs:
     - name: Build executable files
       run: npm run pkg
     - name: Cache executable files built
-      uses: actions/cache/save@v3
+      uses: actions/cache/save@v5
       with:
         path: pkg
         key: ${{ github.run_id }}-${{ github.run_number }}
@@ -51,7 +51,7 @@ jobs:
           fetch-depth: 0
       - run: git fetch --force --tags
       - name: Restore cached executable files previously built
-        uses: actions/cache/restore@v3
+        uses: actions/cache/restore@v5
         with:
           path: pkg
           key: ${{ github.run_id }}-${{ github.run_number }}
